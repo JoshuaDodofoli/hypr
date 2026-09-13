@@ -1,7 +1,7 @@
 local mainMod = "SUPER"
-local noctCall = "noctalia msg "
 local launchPrefix = "uwsm app -- " -- if you are not using UWSM, make this empty (e.g. "")
 local monitors = { MONITOR1, MONITOR2, MONITOR3 }
+local scripts = "$HOME/.config/hypr/scripts/"
 
 ---------------------------
 ---- WINDOW MANAGEMENT ----
@@ -21,7 +21,7 @@ hl.bind(mainMod .. " + Right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + Up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + Down",  hl.dsp.focus({ direction = "down" }))
 hl.bind("ALT + Tab",           hl.dsp.window.cycle_next())
-hl.bind(mainMod .. " + Tab",   hl.dsp.exec_cmd(noctCall .. "window-switcher"))
+hl.bind(mainMod .. " + Tab",   hl.dsp.exec_cmd("rofi -show window"))
 
 -- Move active window around workspaces & monitors
 hl.bind(mainMod .. " + SHIFT + Up",                   hl.dsp.window.move({ direction = "u" }))
@@ -78,35 +78,34 @@ hl.bind(mainMod .. " + C",          hl.dsp.exec_cmd(launchPrefix .. CALCULATOR))
 hl.bind("XF86Calculator",           hl.dsp.exec_cmd(launchPrefix .. CALCULATOR))
 hl.bind(mainMod .. " + W",          hl.dsp.exec_cmd(launchPrefix .. BROWSER))
 -- hl.bind("CONTROL + SHIFT + Escape", hl.dsp.exec_cmd(launchPrefix .. TERMINAL .. " -e btop"))
-hl.bind(mainMod .. " + Z",          hl.dsp.exec_cmd(noctCall .. "settings-toggle"))
-hl.bind(mainMod .. " + X",          hl.dsp.exec_cmd(noctCall .. "panel-toggle control-center"))
-hl.bind(mainMod .. " + Space",      hl.dsp.exec_cmd(noctCall .. "panel-toggle launcher"))
-hl.bind(mainMod .. " + period",     hl.dsp.exec_cmd(noctCall .. "panel-toggle launcher /emo"))
-hl.bind(mainMod .. " + L",          hl.dsp.exec_cmd(noctCall .. "session lock"))
-hl.bind(mainMod .. " + ALT + C",    hl.dsp.exec_cmd(noctCall .. "panel-toggle session"))
-hl.bind("CONTROL + ALT + Delete",   hl.dsp.exec_cmd(noctCall .. "panel-toggle session"))
-hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd(noctCall .. "panel-toggle session"))
-hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd(noctCall .. "bar-toggle"))
+hl.bind(mainMod .. " + Z",          hl.dsp.exec_cmd(launchPrefix .. "nwg-look"))
+hl.bind(mainMod .. " + X",          hl.dsp.exec_cmd(scripts .. "system-menu"))
+hl.bind(mainMod .. " + Space",      hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(mainMod .. " + L",          hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mainMod .. " + ALT + C",    hl.dsp.exec_cmd(scripts .. "session-menu"))
+hl.bind("CONTROL + ALT + Delete",   hl.dsp.exec_cmd(scripts .. "session-menu"))
+hl.bind(mainMod .. " + SHIFT + Escape", hl.dsp.exec_cmd(scripts .. "session-menu"))
+hl.bind(mainMod .. " + B",          hl.dsp.exec_cmd("pkill -SIGUSR1 waybar"))
 
 ---------------------------
 ---- HARDWARE CONTROLS ----
 ---------------------------
 
 -- Audio
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(noctCall .. "volume-up 5%"),   { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(noctCall .. "volume-down 5%"), { locked = true, repeating = true })
-hl.bind("XF86AudioMute",        hl.dsp.exec_cmd(noctCall .. "volume-mute"),    { locked = true })
-hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd(noctCall .. "mic-mute"),       { locked = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),        { locked = true, repeating = true })
+hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),       { locked = true })
+hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),     { locked = true })
 
 -- Media
-hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd(noctCall .. "media toggle"),   { locked = true })
-hl.bind("XF86AudioPause", hl.dsp.exec_cmd(noctCall .. "media toggle"),   { locked = true })
-hl.bind("XF86AudioNext",  hl.dsp.exec_cmd(noctCall .. "media next"),     { locked = true })
-hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd(noctCall .. "media previous"), { locked = true })
+hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
+hl.bind("XF86AudioNext",  hl.dsp.exec_cmd("playerctl next"),       { locked = true })
+hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
 -- Brightness
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd(noctCall .. "brightness-up current 5%"),   { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(noctCall .. "brightness-down current 5%"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
 
 -------------------
 ---- UTILITIES ----
@@ -114,19 +113,19 @@ hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd(noctCall .. "brightness-down cu
 
 -- Screen Capture
 hl.bind(mainMod .. " + P",     hl.dsp.exec_cmd("hyprpicker -a -n"))
-hl.bind("Print",               hl.dsp.exec_cmd(noctCall .. "screenshot-fullscreen all"))
-hl.bind("SHIFT + Print",       hl.dsp.exec_cmd(noctCall .. "screenshot-region"))
-hl.bind("CONTROL + SHIFT + Print", hl.dsp.exec_cmd(noctCall .. "screenshot-annotate"))
+hl.bind("Print",               hl.dsp.exec_cmd(scripts .. "screenshot full"))
+hl.bind("SHIFT + Print",       hl.dsp.exec_cmd(scripts .. "screenshot region"))
+hl.bind("CONTROL + SHIFT + Print", hl.dsp.exec_cmd(scripts .. "screenshot annotate"))
 
 -- Theming and Wallpaper
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(noctCall .. "panel-toggle wallpaper"))
+hl.bind(mainMod .. " + SHIFT + W", hl.dsp.exec_cmd(scripts .. "wallpaper-menu"))
 
 -- Clipboard
-hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(noctCall .. "panel-toggle clipboard"))
+hl.bind(mainMod .. " + V", hl.dsp.exec_cmd(scripts .. "clipboard-menu"))
 
 -- Notifications
-hl.bind(mainMod .. " + A", hl.dsp.exec_cmd(noctCall .. "panel-toggle control-center notifications"))
-hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd(noctCall .. "notification-dnd-toggle"))
+hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("swaync-client -t -sw"))
+hl.bind(mainMod .. " + SHIFT + A", hl.dsp.exec_cmd("swaync-client -d -sw"))
 
 -------------------------------
 ---- WORKSPACES & MONITORS ----

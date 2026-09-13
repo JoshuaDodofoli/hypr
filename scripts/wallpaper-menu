@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+wallpaper_dir=/usr/share/wallpapers/cachyos-wallpapers
+choice=$(find "$wallpaper_dir" -maxdepth 1 -type f -printf '%f\n' | sort | rofi -dmenu -i -no-custom -p 'Wallpaper' -theme "$theme") || exit 0
+[[ -n "$choice" ]] || exit 0
+hyprctl hyprpaper wallpaper ", $wallpaper_dir/$choice, cover"

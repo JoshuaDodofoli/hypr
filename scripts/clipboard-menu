@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+entries=$(cliphist list || true)
+if [[ -z "$entries" ]]; then
+    notify-send 'Clipboard' 'Clipboard history is empty'
+    exit 0
+fi
+
+choice=$(printf '%s\n%s\n' '󰆴  Clear history' "$entries" | rofi -dmenu -i -p 'Clipboard' -theme "$theme") || exit 0
+if [[ "$choice" == *'Clear history' ]]; then
+    answer=$(printf '%s\n' 'Cancel' 'Clear' | rofi -dmenu -i -no-custom -p 'Clear clipboard history?' -theme "$theme") || exit 0
+    [[ "$answer" == 'Clear' ]] && cliphist wipe
+else
+    printf '%s' "$choice" | cliphist decode | wl-copy
+fi

@@ -1,0 +1,72 @@
+configuration {
+    show-icons: false;
+    display-drun: "Apps";
+}
+
+* {
+    background: #08101aee;
+    background-alt: #132032ee;
+    foreground: #d6deeb;
+    muted: #71839b;
+    accent: #52dccc;
+}
+
+window {
+    width: 330px;
+    location: northeast;
+    anchor: northeast;
+    x-offset: -10px;
+    y-offset: 42px;
+    padding: 10px;
+    background-color: @background;
+    border: 1px;
+    border-color: #52dccc55;
+    border-radius: 10px;
+}
+
+mainbox {
+    spacing: 8px;
+    background-color: transparent;
+}
+
+inputbar {
+    padding: 8px 10px;
+    background-color: @background-alt;
+    border-radius: 7px;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    padding: 0 8px 0 0;
+}
+
+entry {
+    text-color: @foreground;
+    placeholder-color: @muted;
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    spacing: 3px;
+    background-color: transparent;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px 10px;
+    background-color: transparent;
+    text-color: @foreground;
+    border-radius: 7px;
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #07131f;
+}
+
+element-text {
+    background-color: inherit;
+    text-color: inherit;
+}

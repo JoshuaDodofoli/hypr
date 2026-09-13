@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+scripts="$HOME/.config/hypr/scripts"
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+choice=$(printf '%s\n' \
+    '󰖩  Network' \
+    '󰂯  Bluetooth' \
+    '󰕾  Audio' \
+    '󰾆  Power profile' \
+    '󰂚  Notifications' \
+    '󰒓  Appearance' \
+    '󰐥  Session' | rofi -dmenu -i -no-custom -p 'Quick settings' -theme "$theme") || exit 0
+
+case "$choice" in
+    *Network) "$scripts/network-menu" ;;
+    *Bluetooth) "$scripts/bluetooth-menu" ;;
+    *Audio) "$scripts/audio-menu" ;;
+    *Power\ profile) "$scripts/power-profile-menu" ;;
+    *Notifications) swaync-client -t -sw ;;
+    *Appearance) uwsm app -- nwg-look ;;
+    *Session) "$scripts/session-menu" ;;
+esac

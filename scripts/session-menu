@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+choice=$(printf '%s\n' \
+    '󰌾  Lock' \
+    '󰤄  Lock & suspend' \
+    '󰍃  Logout' \
+    '󰜉  Reboot' \
+    '󰐥  Shutdown' | rofi -dmenu -i -no-custom -p 'Session' -theme "$theme") || exit 0
+
+confirm() {
+    local action=$1
+    local answer
+    answer=$(printf '%s\n' 'Cancel' "$action" | rofi -dmenu -i -no-custom -p "Confirm $action" -theme "$theme") || return 1
+    [[ "$answer" == "$action" ]]
+}
+
+case "$choice" in
+    *Lock\ \&\ suspend) loginctl lock-session && systemctl suspend ;;
+    *Lock) loginctl lock-session ;;
+    *Logout) confirm 'Logout' && hyprctl dispatch exit ;;
+    *Reboot) confirm 'Reboot' && systemctl reboot ;;
+    *Shutdown) confirm 'Shutdown' && systemctl poweroff ;;
+esac

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+choice=$(printf '%s\n' \
+    '󰖁  Toggle speaker mute' \
+    '󰍭  Toggle microphone mute' \
+    '󰒓  Open audio mixer' | rofi -dmenu -i -no-custom -p 'Audio' -theme "$theme") || exit 0
+
+case "$choice" in
+    *speaker*) wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ;;
+    *microphone*) wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle ;;
+    *mixer*) uwsm app -- pavucontrol ;;
+esac

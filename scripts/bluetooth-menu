@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+if bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then
+    power_action='󰂲  Disable Bluetooth'
+else
+    power_action='󰂯  Enable Bluetooth'
+fi
+
+choice=$(printf '%s\n' \
+    "$power_action" \
+    '󰑐  Manage devices' | rofi -dmenu -i -no-custom -p 'Bluetooth' -theme "$theme") || exit 0
+
+case "$choice" in
+    *Disable\ Bluetooth) bluetoothctl power off ;;
+    *Enable\ Bluetooth) bluetoothctl power on ;;
+    *Manage*) uwsm app -- blueman-manager ;;
+esac

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+current=$(powerprofilesctl get 2>/dev/null || printf 'unknown')
+choice=$(printf '%s\n' \
+    '󰓅  Performance' \
+    '󰾅  Balanced' \
+    '󰌪  Power saver' | rofi -dmenu -i -no-custom -p "Power: $current" -theme "$theme") || exit 0
+
+case "$choice" in
+    *Performance) powerprofilesctl set performance ;;
+    *Balanced) powerprofilesctl set balanced ;;
+    *Power\ saver) powerprofilesctl set power-saver ;;
+esac

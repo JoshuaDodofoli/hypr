@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+theme="$HOME/.config/hypr/rofi/menu.rasi"
+wifi_state=$(nmcli -terse -fields WIFI general 2>/dev/null || printf 'disabled')
+if [[ "$wifi_state" == "enabled" ]]; then
+    wifi_action='󰤭  Disable Wi-Fi'
+else
+    wifi_action='󰤨  Enable Wi-Fi'
+fi
+
+choice=$(printf '%s\n' \
+    "$wifi_action" \
+    '󰑐  Connect / edit connections' \
+    '󰖟  Terminal network manager' | rofi -dmenu -i -no-custom -p 'Network' -theme "$theme") || exit 0
+
+case "$choice" in
+    *Disable\ Wi-Fi) nmcli radio wifi off ;;
+    *Enable\ Wi-Fi) nmcli radio wifi on ;;
+    *Connect*) uwsm app -- nm-connection-editor ;;
+    *Terminal*) uwsm app -- kitty -e nmtui ;;
+esac

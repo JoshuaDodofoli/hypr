@@ -1,0 +1,163 @@
+@define-color bg rgba(8, 14, 26, 0.88);
+@define-color surface rgba(19, 31, 50, 0.82);
+@define-color surface-hover rgba(32, 52, 77, 0.92);
+@define-color text #d6deeb;
+@define-color muted #71839b;
+@define-color accent #52dccc;
+@define-color blue #82aaff;
+@define-color warning #ebcb8b;
+@define-color critical #bf616a;
+
+* {
+  border: none;
+  border-radius: 0;
+  min-height: 0;
+  font-family: "JetBrainsMono Nerd Font", "Noto Sans", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+window#waybar {
+  background: @bg;
+  color: @text;
+  border: 1px solid rgba(82, 220, 204, 0.14);
+  border-radius: 10px;
+}
+
+tooltip {
+  background: rgba(8, 14, 26, 0.97);
+  border: 1px solid rgba(82, 220, 204, 0.35);
+  border-radius: 9px;
+}
+
+tooltip label {
+  color: @text;
+  padding: 7px;
+}
+
+#custom-launcher,
+#workspaces,
+#clock,
+#mpris,
+#privacy,
+#idle_inhibitor,
+#tray,
+#custom-notifications,
+#bluetooth,
+#network,
+#pulseaudio,
+#backlight,
+#battery,
+#custom-power {
+  margin: 3px 0;
+  padding: 0 8px;
+  background: @surface;
+  border-radius: 7px;
+}
+
+#custom-launcher {
+  color: @accent;
+  font-size: 16px;
+  padding: 0 10px;
+}
+
+#workspaces {
+  padding: 0 3px;
+}
+
+#workspaces button {
+  min-width: 22px;
+  padding: 0 5px;
+  color: @muted;
+  background: transparent;
+  border-radius: 6px;
+  transition: all 120ms ease;
+}
+
+#workspaces button:hover {
+  color: @text;
+  background: @surface-hover;
+}
+
+#workspaces button.active {
+  color: #07131f;
+  background: @accent;
+}
+
+#workspaces button.urgent {
+  color: #ffffff;
+  background: @critical;
+}
+
+#clock {
+  color: @text;
+  padding: 0 12px;
+}
+
+#mpris {
+  color: @blue;
+}
+
+#privacy-item {
+  color: @warning;
+}
+
+#idle_inhibitor.activated {
+  color: @warning;
+}
+
+#custom-notifications,
+#network,
+#bluetooth {
+  color: @blue;
+}
+
+#pulseaudio,
+#backlight {
+  color: @accent;
+}
+
+#battery {
+  color: @text;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: @accent;
+}
+
+#battery.warning:not(.charging) {
+  color: @warning;
+}
+
+#battery.critical:not(.charging) {
+  color: @critical;
+  animation: blink 1s steps(2) infinite;
+}
+
+#custom-power {
+  color: @critical;
+  font-size: 15px;
+  padding: 0 10px;
+}
+
+#custom-launcher:hover,
+#clock:hover,
+#mpris:hover,
+#idle_inhibitor:hover,
+#custom-notifications:hover,
+#bluetooth:hover,
+#network:hover,
+#pulseaudio:hover,
+#backlight:hover,
+#battery:hover,
+#custom-power:hover {
+  background: @surface-hover;
+}
+
+@keyframes blink {
+  to {
+    color: #ffffff;
+    background: @critical;
+  }
+}
