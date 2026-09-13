@@ -1,90 +1,102 @@
-# Hyprland desktop configuration
+# Minimal Hyprland desktop
 
-A complete Hyprland desktop built around Noctalia. Noctalia provides the bar,
-application launcher, taskbar, notifications, clipboard history, screenshots,
-control center, lock screen, idle handling, and session menu.
+A complete CachyOS/Hyprland setup centered on a custom minimal Waybar. The
+desktop uses standalone Hyprland tools rather than a desktop shell:
 
-## Desktop controls
+- Waybar for the panel
+- Rofi for the launcher and context menus
+- Hyprlock + Hypridle for lock and power management
+- SwayNotificationCenter for notifications and Do Not Disturb
+- Hyprpaper for wallpapers
+- Cliphist for clipboard history
+- Hyprpolkitagent for graphical authentication prompts
+
+## Keybindings
 
 | Shortcut | Action |
 | --- | --- |
-| `Super+Space` | Open the application launcher |
-| `Super+Return` / `Super+T` | Open Kitty |
-| `Super+E` | Open Dolphin |
-| `Super+W` | Open Firefox |
-| `Super+Tab` | Open the window switcher |
-| `Super+L` | Lock the session |
-| `Ctrl+Alt+Delete` | Open the session menu |
-| `Super+Shift+Escape` | Open the session menu |
-| `Super+Alt+C` | Open the session menu |
-| `Super+B` | Toggle the bar |
-| `Super+X` | Open Control Center |
-| `Super+Z` | Open Noctalia Settings |
-| `Super+A` | Open notifications |
+| `Super+Space` | Application launcher |
+| `Super+Return` / `Super+T` | Kitty terminal |
+| `Super+E` | Dolphin file manager |
+| `Super+W` | Firefox |
+| `Super+Tab` | Window switcher |
+| `Super+X` | Quick settings menu |
+| `Super+Z` | GTK appearance settings |
+| `Super+L` | Lock now |
+| `Ctrl+Alt+Delete` | Session menu |
+| `Super+Shift+Escape` | Session menu |
+| `Super+Alt+C` | Session menu |
+| `Super+B` | Hide/show Waybar |
+| `Super+A` | Notification center |
 | `Super+Shift+A` | Toggle Do Not Disturb |
-| `Super+V` | Open clipboard history |
-| `Super+Shift+W` | Open the wallpaper picker |
+| `Super+V` | Clipboard history |
+| `Super+Shift+W` | Wallpaper menu |
 | `Print` | Capture all displays |
 | `Shift+Print` | Capture a region |
 | `Ctrl+Shift+Print` | Capture and annotate |
 | `Super+1` … `Super+0` | Switch workspace |
-| `Super+Alt+1` … `Super+Alt+0` | Move the active window to a workspace |
+| `Super+Alt+1` … `Super+Alt+0` | Move window to workspace |
 | `Super+mouse wheel` | Cycle workspaces |
 
-Logout ends the graphical session and returns to Noctalia Greeter; logging in
-is handled by the greeter, so it intentionally has no in-session keybinding.
+Logging in is handled by Noctalia Greeter after logout. There is intentionally
+no “login” keybinding inside an active desktop session.
 
-## Bar interactions
+## Waybar controls
 
-The bar includes a launcher, clock, workspaces, taskbar, media, system metrics,
-tray, clipboard, screenshots, notifications, privacy indicator, caffeine mode,
-brightness, network, Bluetooth, volume, battery, power profile, and session
-button.
+The bar stays visually small while exposing details in tooltips and actions:
 
-- Left-click widgets to open their primary panel or action.
-- Right-click empty bar space to open Control Center.
-- Right-click the screenshot widget to open its capture menu.
-- Right-click tray icons for their native context menus.
-- Right-click the launcher to open Noctalia Settings.
-- Right-click volume to mute, notifications to toggle DND, and media to
-  play/pause.
-- Middle-click a widget to open that widget's settings.
-- Click the red session icon for Lock, Logout, Lock & Suspend, Reboot, and
-  Shutdown.
+- Launcher: left-click opens apps; right-click opens Quick Settings.
+- Workspaces: click or scroll to switch.
+- Clock: left-click toggles date format; hover shows a calendar; right-click
+  opens Quick Settings.
+- Media: click to play/pause; right-click skips to the next track.
+- Caffeine: click to pause/resume idle locking.
+- Tray: application icons provide their native context menus.
+- Notifications: left-click opens the center; right-click toggles DND.
+- Bluetooth: left-click manages devices; right-click toggles power.
+- Network: left-click edits connections; right-click opens its context menu.
+- Volume: click mutes, middle-click opens the mixer, right-click opens audio
+  controls, and scrolling changes volume.
+- Brightness: scroll to adjust.
+- Battery: left-click chooses a power profile; right-click opens the session
+  menu.
+- Power: left-click opens the confirmed session menu; right-click locks now.
 
-The idle service locks after 10 minutes, switches displays off after 11
-minutes, and locks then suspends after 30 minutes. Toggle the caffeine widget
-when watching something or giving a presentation.
+Logout, reboot, and shutdown always require a second confirmation. The session
+locks after 10 minutes, turns displays off after 11 minutes, and suspends after
+30 minutes. Caffeine mode inhibits those timeouts.
 
-## Configuration layout
+## Layout
 
-- `hyprland.lua` loads the modular files under `config/`.
-- `noctalia/config.toml` is the tracked shell and bar configuration.
-- `~/.config/noctalia/config.toml` should point to the tracked Noctalia file.
-- The old Waybar files can remain in `~/.config/waybar`, but Waybar is no
-  longer started because running two bars causes conflicting panels and trays.
+- `hyprland.lua` loads the modular Hyprland files in `config/`.
+- `waybar/` contains the tracked bar layout and styling.
+- `scripts/` contains all context menus and desktop helpers.
+- `rofi/menu.rasi` styles context menus.
+- `hyprlock.conf`, `hypridle.conf`, and `hyprpaper.conf` configure the
+  standalone session services.
 
-Validate changes before reloading:
+## Dependencies
+
+The configured system uses these packages:
+
+```text
+waybar rofi hyprlock hypridle hyprpaper swaync cliphist
+hyprpolkitagent pavucontrol network-manager-applet blueman
+wl-clipboard grim slurp satty playerctl brightnessctl
+```
+
+## Validation
 
 ```bash
 Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
-noctalia config validate
-```
-
-Then reload the live desktop:
-
-```bash
-hyprctl reload
-noctalia msg config-reload
+jq empty ~/.config/hypr/waybar/config.jsonc
+bash -n ~/.config/hypr/scripts/*
 ```
 
 ## Backup
 
-The pre-integration backup created on this machine is stored at:
+The pre-integration Hyprland, Waybar, and Noctalia files are backed up at:
 
 ```text
 ~/.config-backups/hyprland-20260913-103509
 ```
-
-An additional copy of the former live Noctalia file is stored at
-`~/.config/noctalia/config.toml.pre-hypr-repo`.
