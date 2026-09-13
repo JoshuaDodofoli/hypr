@@ -1,0 +1,16 @@
+# Secrets and local-only overrides
+.env
+.env.*
+*.key
+*.pem
+secrets/
+
+# Editor and runtime files
+*.log
+*.swp
+*.tmp
+*~
+
+# Noctalia writes GUI overrides and state outside this repository. Do not add
+# exported state snapshots here because they may contain machine-specific data.
+noctalia/settings.toml
